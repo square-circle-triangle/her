@@ -1,4 +1,5 @@
 require "her/model/base"
+require "her/model/response_proxy"
 require "her/model/http"
 require "her/model/orm"
 require "her/model/relationships"

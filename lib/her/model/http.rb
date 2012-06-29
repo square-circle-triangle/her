@@ -26,7 +26,11 @@ module Her
         path = "#{build_request_path(attrs)}/#{path}" if path.is_a?(Symbol)
         get_raw(path, attrs) do |parsed_data|
           if parsed_data[:data].is_a?(Array)
-            new_collection(parsed_data[:data])
+            if(parsed_data[:metadata].blank?)
+              new_collection(parsed_data[:data])
+            else
+              Her::Model::ResponseProxy.new(new_collection(parsed_data[:data]),parsed_data[:metadata])
+            end
           else
             new(parsed_data[:data])
           end
@@ -208,36 +212,36 @@ module Her
             get(path, attrs.first || Hash.new)
           end
         end
-      end # }}}
+    end # }}}
 
-      # Define custom POST requests
-      def custom_post(*paths) # {{{
-        metaclass = (class << self; self; end)
-        paths.each do |path|
-          metaclass.send(:define_method, path.to_sym) do |*attrs|
-            post(path, attrs.first || Hash.new)
-          end
+    # Define custom POST requests
+    def custom_post(*paths) # {{{
+      metaclass = (class << self; self; end)
+      paths.each do |path|
+        metaclass.send(:define_method, path.to_sym) do |*attrs|
+          post(path, attrs.first || Hash.new)
         end
-      end # }}}
+      end
+  end # }}}
 
-      # Define custom PUT requests
-      def custom_put(*paths) # {{{
-        metaclass = (class << self; self; end)
-        paths.each do |path|
-          metaclass.send(:define_method, path.to_sym) do |*attrs|
-            put(path, attrs.first || Hash.new)
-          end
-        end
-      end # }}}
+  # Define custom PUT requests
+  def custom_put(*paths) # {{{
+    metaclass = (class << self; self; end)
+    paths.each do |path|
+      metaclass.send(:define_method, path.to_sym) do |*attrs|
+        put(path, attrs.first || Hash.new)
+      end
+    end
+end # }}}
 
-      # Define custom PATCH requests
-      def custom_patch(*paths) # {{{
-        metaclass = (class << self; self; end)
-        paths.each do |path|
-          metaclass.send(:define_method, path.to_sym) do |*attrs|
-            patch(path, attrs.first || Hash.new)
-          end
-        end
+# Define custom PATCH requests
+def custom_patch(*paths) # {{{
+  metaclass = (class << self; self; end)
+  paths.each do |path|
+    metaclass.send(:define_method, path.to_sym) do |*attrs|
+      patch(path, attrs.first || Hash.new)
+    end
+  end
       end # }}}
 
       # Define custom DELETE requests
