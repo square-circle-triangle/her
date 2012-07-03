@@ -8,7 +8,6 @@ module Her
       end
 
       def method_missing(method, *args, &block)
-        puts "CALLING... ... .. ... ... .. #{method.inspect}"
         @meta[method] || @data.send(method, *args, &block)
       end
 
