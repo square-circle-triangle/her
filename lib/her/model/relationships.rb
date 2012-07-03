@@ -119,10 +119,13 @@ module Her
           @data[name] = case type
             when :belongs_to
               foreign_key = attrs[:foreign_key].to_sym
+              klass.uses_api self.api
               klass.get_resource("#{klass.build_request_path(:id => @data[foreign_key])}")
             when :has_many
+              klass.uses_api self.api
               klass.get_collection("#{path}/#{name.to_s.pluralize}")
             when :has_one
+              klass.uses_api self.api
               klass.get_resource("#{path}/#{name.to_s.singularize}")
           end
         end
