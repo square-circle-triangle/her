@@ -119,7 +119,7 @@ module Her
       #   @user.save
       #   # Called via POST "/users"
       def save # {{{
-        params = @data.dup
+        params = { self.model_name => @data.dup }
         resource = self
 
         if @data[:id]
