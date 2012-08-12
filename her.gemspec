@@ -2,6 +2,10 @@
 $:.push File.expand_path("../lib", __FILE__)
 require "her/version"
 
+if !defined?(YAML::ENGINE).nil? && YAML::ENGINE.respond_to?(:yamler)
+  YAML::ENGINE.yamler = 'syck'
+end
+
 Gem::Specification.new do |s|
   s.name        = "her"
   s.version     = Her::VERSION
