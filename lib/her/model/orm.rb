@@ -89,6 +89,7 @@ module Her
           request(params.merge(:_method => :post, :_path => "#{build_request_path(params)}")) do |parsed_data|
             resource.instance_eval do
               @data = parsed_data[:data]
+              @errors = parsed_data[:errors]
             end
           end
         end
@@ -133,6 +134,7 @@ module Her
         self.class.wrap_in_hooks(resource, *hooks) do |resource, klass|
           klass.request(params.merge(:_method => method, :_path => "#{request_path}")) do |parsed_data|
             @data = parsed_data[:data]
+            @errors = parsed_data[:errors]
           end
         end
         self
