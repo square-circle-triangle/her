@@ -133,7 +133,8 @@ module Her
 
         self.class.wrap_in_hooks(resource, *hooks) do |resource, klass|
           klass.request(params.merge(:_method => method, :_path => "#{request_path}")) do |parsed_data|
-            @data = parsed_data[:data]
+            _data = parsed_data[:data].blank? ? params[self.model_name] : parsed_data[:data]
+            @data = _data
             @errors = parsed_data[:errors]
           end
         end
